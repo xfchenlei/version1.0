@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.meishizhaoshi.hurting"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required -->
+    <permission
+        android:name="com.meishizhaoshi.hurting.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <!-- Required -->
+    <uses-permission android:name="com.meishizhaoshi.hurting.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- since 1.6.0 -->
+    <!-- Optional. Required for location feature -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+    <application
+        android:name="com.meishizhaoshi.hurting.MyApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="0d30a18cff138b5c1bab883e7599d5e1" />
+
+        <!-- Required -->
+        <service
+            android:name="cn.jpush.android.service.PushService"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER" />
+                <action android:name="cn.jpush.android.intent.REPORT" />
+                <action android:name="cn.jpush.android.intent.PushService" />
+                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+            </intent-filter>
+        </service>
+
+        <!-- Required -->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true" >
+            <intent-filter android:priority="1000" >
+
+                <!-- since 1.3.5 -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
+                <!-- since 1.3.5 -->
+                <category android:name="com.meishizhaoshi.hurting" />
+                <!-- since 1.3.5 -->
+            </intent-filter>
+            <!-- since 1.3.5 -->
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <!-- Required SDK核心功能 -->
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.meishizhaoshi.hurting" />
+            </intent-filter>
+        </activity>
+        <!-- Required SDK核心功能 -->
+        <service
+            android:name="cn.jpush.android.service.DownloadService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+        <!-- Required SDK核心功能 -->
+        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+
+        <!-- Required. For publish channel feature -->
+        <!-- JPUSH_CHANNEL 是为了方便开发者统计APK分发渠道。 -->
+        <!-- 例如: -->
+        <!-- 发到 Google Play 的APK可以设置为 google-play; -->
+        <!-- 发到其他市场的 APK 可以设置为 xxx-market。 -->
+        <!-- 目前这个渠道统计功能的报表还未开放。 -->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
+        <!-- Required. AppKey copied from Portal -->
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="6394d771a641f9103a8428e1" />
+
+        <!-- 自己的消息接受类 -->
+        <receiver
+            android:name="com.meishizhaoshi.hurting.message.JpushMessageReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" />
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+
+                <category android:name="com.meishizhaoshi.hurting" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 支付宝支付 -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" >
+        </activity>
+        <activity
+            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" >
+        </activity>
+        <!-- 加载页面activity -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.main.LoadingActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- 二维码扫描页面 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.zxing.CaptureActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 引导页面 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.main.GuideActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 主页面 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.main.MainActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <!-- 高德地图的key -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="5869a447be6106705da967c97e189d35" />
+        <!-- 显示地图的页面 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.map.MapActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 登陆页面 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.main.LoginActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 注册页面 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.main.RegisterActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 忘记密码页面 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.main.ForgotPwdActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 设置页页面 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.SettingActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 更改登陆密码 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.main.UpdatePasswordActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 选择城市 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.find.ChooseCityActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 修改手机号码 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.main.UpdatePhoneActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 职位详情 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.find.OfficeDetailActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 修改支付宝绑定 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.main.UpdateAlipyBoundActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 个人主页 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.PersonIndexActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 个人资料 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.PersonInformationActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 编辑个人资料 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.EditPersonInfoActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 企业主页 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.BusinessIndexActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 企业认证 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.BusinessAttestActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 编辑企业资料 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.EditBusinessInforActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 认证个人信息 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.PersonAttestActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 根据类别筛选 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.find.ClassificationActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 我的历史发布 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.publish.MinePublishActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <service android:name="com.meishizhaoshi.hurting.service.LoadingService" />
+        <!-- 求职消息 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.message.HuntJobActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+        <!-- 招聘消息 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.message.RecruitmentActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+
+        <!-- 领工资消息 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.message.AskWageActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
+        <!-- 发送工资 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.ConfirmSendPayroll"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+
+        <!-- 反馈 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.FeedBackActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+        <!-- 企业发布 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.publish.PersonPublishActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+
+        <!-- 确认发布 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.publish.ConfrimPublishActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 确认支付 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.publish.ConfirmPayrollActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- 我的二维码  放大 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.main.QrCodeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+          <!-- 我的资产 -->
+        <activity
+            android:name="com.meishizhaoshi.hurting.mine.MineAssetsActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+    </application>
+
+</manifest>
